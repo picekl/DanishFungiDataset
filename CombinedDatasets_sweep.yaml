@@ -1,0 +1,32 @@
+name: WildlifeDatasets - CombinedDatasets
+project: WildlifeDatasets-Experiments
+entity: picekl
+description: Initial hyper-parameter tuning for various architectures and three dataset splits of the CombinedDatasets dataset.
+program: train.py
+method: grid
+parameters:
+    dataset:
+        values: ["CombinedDatasets"]
+    batch_size:
+        values: [32]
+    accumulation_steps:
+        values: [8, 16]
+    learning_rate:
+        values: [0.01, 0.005, 0.001]
+    augmentations:
+        values: ["vit_heavy"]
+    loss:
+        values: ["SeeSawLoss", "CrossEntropyLoss"]
+    architecture:
+        values: ["swin_base_patch4_window7_224"]
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--config-path"
+  - "./configs/default_config.yaml"
+  - "--wandb-entity"
+  - "picekl"
+  - "--wandb-project"
+  - "WildlifeDatasets-Experiments"
+  - ${args}
