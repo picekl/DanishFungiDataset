@@ -1,0 +1,24 @@
+# data
+augmentations: 'light'
+image_size: [384, 384]  # [height, width]
+dataset: 'DF20M'
+
+# model
+architecture: 'vit_base_patch16_384'
+
+# training
+train:
+loss: 'CrossEntropyLoss'
+optimizer: 'SGD'
+scheduler: 'plateau'
+epochs: 100
+learning_rate: 0.01
+batch_size: 64
+accumulation_steps: 1
+
+# other
+random_seed: 777
+workers: 12
+multigpu: False
+tags: ["DanishFungi2023", "384x384", "Production"]  # W&B Run tags
+root_path: "../"

@@ -1,0 +1,32 @@
+DF20M - 299x299 - Production
+|                                                       |   Val. F1 |   Val. Accuracy |   Val. Recall@3 |
+|:------------------------------------------------------|----------:|----------------:|----------------:|
+| resnet18.a1_in1k-CrossEntropyLoss-light               |      0.43 |            0.56 |            0.75 |
+| resnet34.a1_in1k-CrossEntropyLoss-light               |      0.43 |            0.57 |            0.77 |
+| inception_v3.tf_in1k-CrossEntropyLoss-light           |      0.48 |            0.61 |            0.79 |
+| resnet50.a1_in1k-CrossEntropyLoss-light               |      0.48 |            0.61 |            0.8  |
+| mobilenetv2_100.ra_in1k-CrossEntropyLoss-light        |      0.49 |            0.61 |            0.79 |
+| inception_resnet_v2.tf_in1k-CrossEntropyLoss-light    |      0.5  |            0.63 |            0.8  |
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light     |      0.5  |            0.63 |            0.8  |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light     |      0.51 |            0.64 |            0.81 |
+| tf_efficientnet_b5.ap_in1k-CrossEntropyLoss-light     |      0.52 |            0.63 |            0.81 |
+| inception_v4.tf_in1k-CrossEntropyLoss-light           |      0.52 |            0.63 |            0.82 |
+| tf_efficientnet_b1.ap_in1k-CrossEntropyLoss-light     |      0.53 |            0.64 |            0.81 |
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light |      0.53 |            0.66 |            0.83 |
+
+
+DF20M - 224x224 - Production
+|                                                       |   Val. F1 |   Val. Accuracy |   Val. Recall@3 |
+|:------------------------------------------------------|----------:|----------------:|----------------:|
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light     |      0.46 |            0.59 |            0.77 |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light     |      0.48 |            0.59 |            0.79 |
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light |      0.5  |            0.62 |            0.81 |
+
+DF20M - 384x384 - Production
+|                                                                   |   Val. F1 |   Val. Accuracy |   Val. Recall@3 |
+|:------------------------------------------------------------------|----------:|----------------:|----------------:|
+| vit_base_patch16_384.augreg_in21k_ft_in1k-CrossEntropyLoss-light  |      0.21 |            0.31 |            0.49 |
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light                 |      0.51 |            0.64 |            0.82 |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light                 |      0.53 |            0.65 |            0.82 |
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light             |      0.56 |            0.68 |            0.84 |
+| vit_large_patch16_384.augreg_in21k_ft_in1k-CrossEntropyLoss-light |      0.57 |            0.69 |            0.85 |

@@ -1,0 +1,21 @@
+name: DanishFungi2023 Production 299x299
+project: DanishFungi2023
+entity: zcu_cv
+description: 299x299 Image size sweep.
+program: danishfungi2023_train_all.py
+method: grid
+parameters:
+    architecture:
+        values: ["resnet18.a1_in1k", 'mobilenetv2_100.ra_in1k', 'tf_efficientnet_b0.ap_in1k', "resnet34.a1_in1k", "tf_efficientnet_b1.ap_in1k", "tf_efficientnet_b3.ap_in1k", "tf_efficientnet_b5.ap_in1k", "resnet50.a1_in1k", 'inception_v4.tf_in1k', 'inception_v3.tf_in1k', 'inception_resnet_v2.tf_in1k', 'legacy_seresnext101_32x4d.in1k']
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--config-path"
+  - "../config/299_config_all.yaml"
+  - "--wandb-entity"
+  - "zcu_cv"
+  - "--wandb-project"
+  - "DanishFungi2023"
+  - ${args}

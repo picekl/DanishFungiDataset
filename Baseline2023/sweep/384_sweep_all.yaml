@@ -1,0 +1,21 @@
+name: DanishFungi2023 Production 384x384
+project: DanishFungi2023
+entity: zcu_cv
+description: 384x384 Image size sweep.
+program: danishfungi2023_train_all.py
+method: grid
+parameters:
+    architecture:
+        values: ['tf_efficientnet_b0.ap_in1k',  "tf_efficientnet_b3.ap_in1k", 'legacy_seresnext101_32x4d.in1k', 'vit_base_patch16_384', 'vit_large_patch16_384']
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--config-path"
+  - "../config/384_config_all.yaml"
+  - "--wandb-entity"
+  - "zcu_cv"
+  - "--wandb-project"
+  - "DanishFungi2023"
+  - ${args}

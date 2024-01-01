@@ -1,0 +1,22 @@
+name: DanishFungi2023_Mini
+project: DanishFungi2023
+entity: zcu_cv
+description: Initial training for performance evaluation of different architectures.
+program: danishfungi2023_train.py
+method: grid
+parameters:
+    architecture:
+        values: ['tf_efficientnet_b0.ap_in1k', "tf_efficientnet_b1.ap_in1k", "tf_efficientnet_b2.ap_in1k", "tf_efficientnet_b3.ap_in1k", "resnet18.a1_in1k", "resnet34.a1_in1k", "resnet50.a1_in1k"]
+    augmentations: 
+        values: ["random_augment"]
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--config-path"
+  - "./configs/default_config.yaml"
+  - "--wandb-entity"
+  - "zcu_cv"
+  - "--wandb-project"
+  - "DanishFungi2023"
+  - ${args}

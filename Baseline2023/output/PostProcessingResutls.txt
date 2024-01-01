@@ -1,0 +1,80 @@
+BVRA/tf_efficientnet_b3.in1k_ft_df20m_224, Calibration: False
+|                                             |       f1 |   accuracy |   recall_3 |
+|:--------------------------------------------|---------:|-----------:|-----------:|
+| Vanilla                                     | 0.487364 |   0.598217 |   0.786004 |
+| month                                       | 0.498526 |   0.610916 |   0.802216 |
+| Habitat                                     | 0.536306 |   0.628749 |   0.825182 |
+| Substrate                                   | 0.516325 |   0.620103 |   0.810322 |
+| MetaSubstrate                               | 0.503875 |   0.608214 |   0.797892 |
+| month + Habitat                             | 0.547031 |   0.637936 |   0.833288 |
+| month + Substrate                           | 0.527162 |   0.6301   |   0.82194  |
+| month + MetaSubstrate                       | 0.514258 |   0.618211 |   0.80843  |
+| Habitat + Substrate                         | 0.563822 |   0.650905 |   0.842205 |
+| Habitat + MetaSubstrate                     | 0.547321 |   0.637125 |   0.833288 |
+| Substrate + MetaSubstrate                   | 0.519443 |   0.620373 |   0.811402 |
+| month + Habitat + Substrate                 | 0.574128 |   0.65685  |   0.850311 |
+| month + Habitat + MetaSubstrate             | 0.557939 |   0.64361  |   0.840854 |
+| month + Substrate + MetaSubstrate           | 0.530064 |   0.62983  |   0.82221  |
+| Habitat + Substrate + MetaSubstrate         | 0.562446 |   0.649014 |   0.840313 |
+| month + Habitat + Substrate + MetaSubstrate | 0.570382 |   0.654688 |   0.84896  |
+
+BVRA/tf_efficientnet_b3.in1k_ft_df20m_224, Calibration: True
+|                                             |       f1 |   accuracy |   recall_3 |
+|:--------------------------------------------|---------:|-----------:|-----------:|
+| Vanilla                                     | 0.487364 |   0.598217 |   0.786004 |
+| month                                       | 0.500167 |   0.611186 |   0.804918 |
+| Habitat                                     | 0.538028 |   0.630911 |   0.828425 |
+| Substrate                                   | 0.514923 |   0.620103 |   0.810862 |
+| MetaSubstrate                               | 0.505425 |   0.608754 |   0.797352 |
+| month + Habitat                             | 0.55277  |   0.641178 |   0.837882 |
+| month + Substrate                           | 0.528267 |   0.633342 |   0.824102 |
+| month + MetaSubstrate                       | 0.514586 |   0.620643 |   0.809781 |
+| Habitat + Substrate                         | 0.566095 |   0.653337 |   0.843015 |
+| Habitat + MetaSubstrate                     | 0.552332 |   0.640097 |   0.832748 |
+| Substrate + MetaSubstrate                   | 0.520278 |   0.620643 |   0.810322 |
+| month + Habitat + Substrate                 | 0.577839 |   0.661173 |   0.854364 |
+| month + Habitat + MetaSubstrate             | 0.562856 |   0.648203 |   0.844637 |
+| month + Substrate + MetaSubstrate           | 0.531973 |   0.631181 |   0.824642 |
+| Habitat + Substrate + MetaSubstrate         | 0.564364 |   0.651716 |   0.842745 |
+| month + Habitat + Substrate + MetaSubstrate | 0.578024 |   0.659822 |   0.853283 |
+
+BVRA/tf_efficientnet_b3.in1k_ft_df20m_224, Calibration: False, Observation: True
+|                                             |       f1 |   accuracy |   recall_3 |
+|:--------------------------------------------|---------:|-----------:|-----------:|
+| Vanilla                                     | 0.584211 |   0.714672 |   0.880573 |
+| month                                       | 0.609297 |   0.727911 |   0.893272 |
+| Habitat                                     | 0.641636 |   0.741691 |   0.909754 |
+| Substrate                                   | 0.617615 |   0.731154 |   0.892191 |
+| MetaSubstrate                               | 0.602475 |   0.722778 |   0.887058 |
+| month + Habitat                             | 0.658572 |   0.751148 |   0.913807 |
+| month + Substrate                           | 0.631678 |   0.737909 |   0.898676 |
+| month + MetaSubstrate                       | 0.622633 |   0.732775 |   0.893812 |
+| Habitat + Substrate                         | 0.664594 |   0.757633 |   0.9184   |
+| Habitat + MetaSubstrate                     | 0.650378 |   0.749797 |   0.913537 |
+| Substrate + MetaSubstrate                   | 0.619206 |   0.730073 |   0.893272 |
+| month + Habitat + Substrate                 | 0.669452 |   0.761416 |   0.921102 |
+| month + Habitat + MetaSubstrate             | 0.657353 |   0.754391 |   0.91813  |
+| month + Substrate + MetaSubstrate           | 0.636948 |   0.7398   |   0.900567 |
+| Habitat + Substrate + MetaSubstrate         | 0.661806 |   0.754391 |   0.91813  |
+| month + Habitat + Substrate + MetaSubstrate | 0.666656 |   0.758173 |   0.921643 |
+
+BVRA/tf_efficientnet_b3.in1k_ft_df20m_224, Calibration: True, Observation: True
+|                                             |       f1 |   accuracy |   recall_3 |
+|:--------------------------------------------|---------:|-----------:|-----------:|
+| Vanilla                                     | 0.584211 |   0.714672 |   0.880573 |
+| month                                       | 0.608489 |   0.727371 |   0.897325 |
+| Habitat                                     | 0.643444 |   0.743313 |   0.907863 |
+| Substrate                                   | 0.615443 |   0.729533 |   0.892461 |
+| MetaSubstrate                               | 0.602691 |   0.722778 |   0.887868 |
+| month + Habitat                             | 0.658628 |   0.751959 |   0.919211 |
+| month + Substrate                           | 0.634763 |   0.74034  |   0.900297 |
+| month + MetaSubstrate                       | 0.624946 |   0.734666 |   0.895163 |
+| Habitat + Substrate                         | 0.667713 |   0.761956 |   0.919751 |
+| Habitat + MetaSubstrate                     | 0.654443 |   0.751689 |   0.915158 |
+| Substrate + MetaSubstrate                   | 0.624196 |   0.730343 |   0.892191 |
+| month + Habitat + Substrate                 | 0.676939 |   0.764928 |   0.923534 |
+| month + Habitat + MetaSubstrate             | 0.664123 |   0.756822 |   0.920562 |
+| month + Substrate + MetaSubstrate           | 0.636051 |   0.738719 |   0.900027 |
+| Habitat + Substrate + MetaSubstrate         | 0.665603 |   0.757903 |   0.91813  |
+| month + Habitat + Substrate + MetaSubstrate | 0.672061 |   0.762497 |   0.922994 |
+
