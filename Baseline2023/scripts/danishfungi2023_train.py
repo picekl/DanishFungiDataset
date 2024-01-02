@@ -29,7 +29,7 @@ from fgvc.utils.wandb import (
     set_best_scores_in_summary,
 )
 
-from hfhub import export_to_huggingface_hub_from_checkpoint
+from hfhub import export_model_to_huggingface_hub_from_checkpoint
 
 logger = logging.getLogger("script")
 
@@ -250,7 +250,7 @@ def train_clf(
     try:
         config["mean"] = model_mean
         config["std"] = model_std
-        export_to_huggingface_hub_from_checkpoint(
+        export_model_to_huggingface_hub_from_checkpoint(
             config=config,
             repo_owner="BVRA",
             saved_model="f1"

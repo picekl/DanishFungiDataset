@@ -1,15 +1,14 @@
-import json
 import os
 import os.path as osp
-from copy import deepcopy
-
 import torch
 import logging
 import warnings
-from functools import wraps
-from collections.abc import MutableMapping
-
+import argparse
+import json
 import yaml
+
+from functools import wraps
+from copy import deepcopy
 
 
 try:
@@ -56,44 +55,40 @@ def remove_suffix(input_string, suffix):
 
 
 @if_huggingface_hub_is_installed
-def export_to_huggingface_hub_from_checkpoint(
+def export_model_to_huggingface_hub_from_checkpoint(
         *,
         config: dict = None,
         repo_owner: str = None,
         saved_model: str = None,
-        model_card_path: str = None,
+        model_card: str = None,
 ) -> str:
     """
     Exports a saved model to the HuggingFace Hub.
     Creates a new model repo if it does not exist. If it does exist,
     the pytorch_model.bin and config.json files will be overwritten.
-    Can be run from CLI with 'python hfhub.py --exp-path <exp_path> --repo-owner <repo_owner>
-    (optionally --saved-model <saved_model>)'
 
     Parameters
     ----------
-    exp_path
-        A dictionary with experiment configuration. Must contain config.yaml and the appropriate model.pth file.
-        Config must have "architecture", "image_size", and "number_of_classes" to create the timm config.json
+    config
+        A dictionary with experiment configuration. Must have "exp_path" (directory with the FGVC run), "architecture",
+         "image_size", and "number_of_classes" as valid keys.
     repo_owner
         The "shortcut" of the HuggingFace repository owner name (owner_name/repository_name).
     saved_model
         String key to select the saved model to export (accuracy, f1, loss, recall, last_epoch).
         best_accuracy.pth is the default.
+    model_card
+        Description of the model that will be displayed in the HuggingFace Hub (README.md).
 
     Returns
     -------
     repo_name
         The whole HuggingFace repository name suitable to download the model through timm.
     """
+    # load script args
+
     config = deepcopy(config)
     exp_path = config.get("exp_path")
-    # load script args
-    if exp_path is None or repo_owner is None:
-        args, extra_args = load_args()
-        exp_path = args.exp_path
-        repo_owner = args.repo_owner
-        saved_model = args.saved_model
 
     api = HuggingFaceAPI()
 
@@ -137,10 +132,11 @@ def export_to_huggingface_hub_from_checkpoint(
         config["mean"] = tuple(model.default_cfg["mean"])
         config["std"] = tuple(model.default_cfg["std"])
 
-    # Create model card
-    if model_card_path is None:
-        model_card_path = create_model_card(config, repo_name)
+    if model_card is None:
+        model_card = get_default_model_card(config, repo_name)
 
+    # Create model card file
+    model_card_path = create_model_card_file(model_card, exp_path)
 
     try:
         HFHubCreateRepo(repo_id=repo_name, repo_type="model", exist_ok=True)
@@ -180,31 +176,6 @@ def export_to_huggingface_hub_from_checkpoint(
     return repo_name
 
 
-def load_args():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--exp-path",
-        help="Path to a exp directory.",
-        type=str,
-        required=True,
-    )
-    parser.add_argument(
-        "--repo-owner",
-        help="Name of the HuggingFace repository owner (shortcut).",
-        type=str,
-        default=True,
-    )
-    parser.add_argument(
-        "--saved-model",
-        help="Specify to select a specific model to export (accuracy, f1, loss, recall, last_epoch).",
-        type=str,
-        required=False,
-    )
-    args, extra_args = parser.parse_known_args()
-    return args, extra_args
-
-
 def _create_timm_config(config: dict, config_path_json: str):
     """ Create a config file for timm. """
     timm_config = {
@@ -232,21 +203,15 @@ def _create_model_repo_name(repo_owner: str, config: dict) -> str:
     return repo_name
 
 
-def get_default_model_card(config: dict) -> str:
-    pass
-
-
-def create_model_card(config: dict, repo_name: str) -> str:
-    """ Create a model card for the model. """
-    exp_path = config["exp_path"]
+def get_default_model_card(config: dict, repo_name: str) -> str:
+    """ Create a default model card for the DanishFungi project. """
     image_size = config["image_size"][-1]
     dataset = config["dataset"]
-    architecture = config['architecture']
 
-    model_mean = config["mean"]
-    model_std = config["std"]
+    model_mean = config.get("mean", "??")
+    model_std = config.get("std", "??")
 
-    output = \
+    model_card = \
 f"""
 ---
 tags:
@@ -311,24 +276,27 @@ output = model(train_transforms(img).unsqueeze(0))  # output is (batch_size, num
   publisher={Multidisciplinary Digital Publishing Institute}
 }
 ```
-
 """
-    output += citations
-    output_path = osp.join(exp_path, "README.md")
-    with open(output_path, "w") as fp:
-        fp.write(output)
+    model_card += citations
+    return model_card
+
+
+def create_model_card_file(model_card: str, exp_path: str) -> str:
+    """ Create a model card file in the exp_path directory. Returns the path. """
+    model_card_path = osp.join(exp_path, "README.md")
+    with open(model_card_path, "w") as fp:
+        fp.write(model_card)
     
-    return output_path
+    return model_card_path
 
 
-def hfhub_load_args():
+def hfhub_load_args() -> tuple[argparse.Namespace, list[str]]:
     """Load script arguments."""
-    import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--exp-path",
-        help="Path to a exp directory.",
+        help="Path to a exp directory with a valid config.yaml file.",
         type=str,
         required=True,
     )
@@ -345,30 +313,43 @@ def hfhub_load_args():
         type=str,
         required=False,
     )
+    parser.add_argument(
+        "--model-card",
+        help="Contents of the model card file.",
+        type=str,
+        required=False,
+    )
     args, extra_args = parser.parse_known_args()
     return args, extra_args
 
 
-def log_model_hfhub(
+def export_to_hfhub(
         *,
         exp_path: str = None,
         repo_owner: str = None,
-        saved_model: str = None
+        saved_model: str = None,
+        model_card: str = None
 ) -> str:
-    """ Wraps
-    """
+    """ Wraps the export_to_huggingface_hub_from_checkpoint() with a CLI interface.
+    Can be run from CLI with 'python hfhub.py --exp-path <exp_path> --repo-owner <repo_owner>
+    (optionally --saved-model <saved_model> --model-card <model_card>)'
+    '"""
     if exp_path is None or repo_owner is None:
         args, extra_args = hfhub_load_args()
-        exp_path = args.exp_path
+        config = {"exp_path": args.exp_path}
         repo_owner = args.repo_owner
         saved_model = args.saved_model
+        model_card = args.model_card
+    else:
+        config = {"exp_path": exp_path}
 
-    return export_to_huggingface_hub_from_checkpoint(
-        exp_path=exp_path,
+    return export_model_to_huggingface_hub_from_checkpoint(
+        config=config,
         repo_owner=repo_owner,
-        saved_model=saved_model
+        saved_model=saved_model,
+        model_card=model_card
     )
 
 
 if __name__ == "__main__":
-    log_model_hfhub()
+    export_to_hfhub()
