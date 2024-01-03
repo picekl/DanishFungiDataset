@@ -14,7 +14,9 @@ from copy import deepcopy
 try:
     import huggingface_hub
 
-    assert hasattr(huggingface_hub, "__version__")  # verify package import not local dir
+    assert hasattr(
+        huggingface_hub, "__version__"
+    )  # verify package import not local dir
     HuggingFaceAPI = huggingface_hub.HfApi
     HFHubCreateRepo = huggingface_hub.create_repo
 except (ImportError, AssertionError):
@@ -44,23 +46,23 @@ SAVED_MODEL_NAMES = {
     "f1": "best_f1",
     "loss": "best_loss",
     "recall": "best_recall@3",
-    "last_epoch": "epoch"
+    "last_epoch": "epoch",
 }
 
 
 def remove_suffix(input_string, suffix):
     if suffix and input_string.endswith(suffix):
-        return input_string[:-len(suffix)]
+        return input_string[: -len(suffix)]
     return input_string
 
 
 @if_huggingface_hub_is_installed
 def export_model_to_huggingface_hub_from_checkpoint(
-        *,
-        config: dict = None,
-        repo_owner: str = None,
-        saved_model: str = None,
-        model_card: str = None,
+    *,
+    config: dict = None,
+    repo_owner: str = None,
+    saved_model: str = None,
+    model_card: str = None,
 ) -> str:
     """
     Exports a saved model to the HuggingFace Hub.
@@ -70,8 +72,9 @@ def export_model_to_huggingface_hub_from_checkpoint(
     Parameters
     ----------
     config
-        A dictionary with experiment configuration. Must have "exp_path" (directory with the FGVC run), "architecture",
-         "image_size", and "number_of_classes" as valid keys.
+        A dictionary with experiment configuration. Must have "exp_path" (directory with the FGVC run),
+        "architecture", "image_size", and "number_of_classes" as valid keys. Also, should have
+        "dataset" key.
     repo_owner
         The "shortcut" of the HuggingFace repository owner name (owner_name/repository_name).
     saved_model
@@ -115,8 +118,10 @@ def export_model_to_huggingface_hub_from_checkpoint(
 
     fgvc_config_path = osp.join(exp_path, "config.yaml")
     if len(config) == 1:  # Try to load config if only the exp_path is given
-        assert osp.exists(fgvc_config_path), f"Config path {fgvc_config_path} does not exist."
-        with open(fgvc_config_path, 'r') as fp:
+        assert osp.exists(
+            fgvc_config_path
+        ), f"Config path {fgvc_config_path} does not exist."
+        with open(fgvc_config_path, "r") as fp:
             config_data = yaml.safe_load(fp)
             config.update(config_data)
 
@@ -162,7 +167,7 @@ def export_model_to_huggingface_hub_from_checkpoint(
             repo_id=repo_name,
             repo_type="model",
         )
-        
+
         api.upload_file(
             path_or_fileobj=model_card_path,
             path_in_repo="README.md",
@@ -177,26 +182,28 @@ def export_model_to_huggingface_hub_from_checkpoint(
 
 
 def _create_timm_config(config: dict, config_path_json: str):
-    """ Create a config file for timm. """
+    """Create a config file for timm."""
     timm_config = {
         "architecture": config["architecture"],
         "input_size": [3, *config["image_size"]],
-        "num_classes": config["number_of_classes"]
+        "num_classes": config["number_of_classes"],
     }
-    with open(config_path_json, 'w') as fp:
+    with open(config_path_json, "w") as fp:
         json.dump(timm_config, fp, indent=4)
 
 
 def _create_model_repo_name(repo_owner: str, config: dict) -> str:
-    """ Create a new HuggingFace model name """
-    dataset = config["dataset"].lower()
+    """Create a new HuggingFace model name"""
+    dataset = config.get("dataset", "").lower()
     image_size = config["image_size"][-1]
 
     architecture = config["architecture"]
     architecture_split = architecture.split(".")
     if len(architecture_split) > 1:
         specification = architecture_split[1].split("_")[-1]
-        definition = f"{architecture_split[0]}.{specification}_ft_{dataset}_{image_size}"
+        definition = (
+            f"{architecture_split[0]}.{specification}_ft_{dataset}_{image_size}"
+        )
     else:
         definition = f"{architecture_split[0]}.ft_{dataset}_{image_size}"
     repo_name = f"{repo_owner}/{definition}"
@@ -204,15 +211,14 @@ def _create_model_repo_name(repo_owner: str, config: dict) -> str:
 
 
 def get_default_model_card(config: dict, repo_name: str) -> str:
-    """ Create a default model card for the DanishFungi project. """
+    """Create a default model card for the DanishFungi project."""
     image_size = config["image_size"][-1]
-    dataset = config["dataset"]
+    dataset = config.get("dataset", "??")
 
-    model_mean = config.get("mean", "??")
-    model_std = config.get("std", "??")
+    model_mean = config.get("mean", "???")
+    model_std = config.get("std", "???")
 
-    model_card = \
-f"""
+    model_card = f"""
 ---
 tags:
 - image-classification
@@ -247,7 +253,7 @@ train_transforms = T.Compose([T.Resize(({image_size}, {image_size})),
                               T.ToTensor(), 
                               T.Normalize({list(model_mean)}, {list(model_std)})]) 
 img = Image.open(PATH_TO_YOUR_IMAGE)
-output = model(train_transforms(img).unsqueeze(0))  # output is (batch_size, num_features) shaped tensor
+output = model(train_transforms(img).unsqueeze(0))
 # output is a (1, num_features) shaped tensor
 ```
 
@@ -282,11 +288,11 @@ output = model(train_transforms(img).unsqueeze(0))  # output is (batch_size, num
 
 
 def create_model_card_file(model_card: str, exp_path: str) -> str:
-    """ Create a model card file in the exp_path directory. Returns the path. """
+    """Create a model card file in the exp_path directory. Returns the path."""
     model_card_path = osp.join(exp_path, "README.md")
     with open(model_card_path, "w") as fp:
         fp.write(model_card)
-    
+
     return model_card_path
 
 
@@ -324,13 +330,13 @@ def hfhub_load_args() -> tuple[argparse.Namespace, list[str]]:
 
 
 def export_to_hfhub(
-        *,
-        exp_path: str = None,
-        repo_owner: str = None,
-        saved_model: str = None,
-        model_card: str = None
+    *,
+    exp_path: str = None,
+    repo_owner: str = None,
+    saved_model: str = None,
+    model_card: str = None,
 ) -> str:
-    """ Wraps the export_to_huggingface_hub_from_checkpoint() with a CLI interface.
+    """Wraps the export_to_huggingface_hub_from_checkpoint() with a CLI interface.
     Can be run from CLI with 'python hfhub.py --exp-path <exp_path> --repo-owner <repo_owner>
     (optionally --saved-model <saved_model> --model-card <model_card>)'
     '"""
@@ -347,7 +353,7 @@ def export_to_hfhub(
         config=config,
         repo_owner=repo_owner,
         saved_model=saved_model,
-        model_card=model_card
+        model_card=model_card,
     )
 
 
