@@ -29,12 +29,12 @@ def get_results_df(tags: set) -> pd.DataFrame:
 
         history = run.history()
 
-        metrics = history[["Val. F1", "Val. Accuracy", "Val. Recall@3"]]
+        metrics = history[["Val. Accuracy", "Val. Recall@3", "Val. F1"]]
         final_metrics = metrics[~metrics.isnull().any(axis=1)].iloc[-1]
 
         results_map[run.name] = final_metrics
 
-    results_df = pd.DataFrame.from_dict(results_map, columns=["Val. F1", "Val. Accuracy", "Val. Recall@3"], orient="index")
+    results_df = pd.DataFrame.from_dict(results_map, columns=["Val. Accuracy", "Val. Recall@3", "Val. F1"], orient="index")
 
     results_df *= 100
 
@@ -43,11 +43,14 @@ def get_results_df(tags: set) -> pd.DataFrame:
 
 
 def main():
-    output_path = "../output/Results.txt"
-    tags = {"384x384", "Production"}
+    resolution_tag = "384x384"
+    dataset_tag = "DF20_FIX"
+    output_path = f"../output/{dataset_tag}_{resolution_tag}.txt"
+    tags = {resolution_tag, "Production", dataset_tag}
     results_df = get_results_df(tags)
-    results_df = results_df.sort_values(["Val. F1", "Val. Accuracy", "Val. Recall@3"])
-    result_message = f"\nDF20M - 384x384 - Production\n{results_df.to_markdown()}\n"
+    results_df = results_df.sort_values(["Val. Accuracy", "Val. Recall@3", "Val. F1"])
+    results_df.sort_index(inplace=True)
+    result_message = f"\n{dataset_tag} - {resolution_tag} - Production\n{results_df.to_markdown()}\n"
     print(result_message)
 
     with open(output_path, "a") as f:
