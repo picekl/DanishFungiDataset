@@ -134,8 +134,8 @@ def export_model_to_huggingface_hub_from_checkpoint(
 
     # Get mean, std
     if "mean" not in config or "std" not in config:
-        config["mean"] = tuple(model.default_cfg["mean"])
-        config["std"] = tuple(model.default_cfg["std"])
+        config["mean"] = tuple(model.get("mean", "???"))
+        config["std"] = tuple(model.get("std", "???"))
 
     if model_card is None:
         model_card = get_default_model_card(config, repo_name)
