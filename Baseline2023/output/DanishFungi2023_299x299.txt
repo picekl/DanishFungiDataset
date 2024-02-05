@@ -1,0 +1,16 @@
+
+DanishFungi2023 - 299x299 - Production
+|                                                       |   Val. Accuracy |   Val. Recall@3 |   Val. F1 |
+|:------------------------------------------------------|----------------:|----------------:|----------:|
+| inception_resnet_v2.tf_in1k-CrossEntropyLoss-light    |           63.06 |           79.68 |     50.49 |
+| inception_v3.tf_in1k-CrossEntropyLoss-light           |           60.79 |           79.06 |     47.88 |
+| inception_v4.tf_in1k-CrossEntropyLoss-light           |           63.47 |           81.63 |     51.83 |
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light |           65.85 |           83.03 |     53.32 |
+| mobilenetv2_100.ra_in1k-CrossEntropyLoss-light        |           60.58 |           78.9  |     48.59 |
+| resnet18.a1_in1k-CrossEntropyLoss-light               |           55.8  |           75.17 |     42.98 |
+| resnet34.a1_in1k-CrossEntropyLoss-light               |           56.8  |           77.17 |     43.21 |
+| resnet50.a1_in1k-CrossEntropyLoss-light               |           60.58 |           79.82 |     48.43 |
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light     |           63.04 |           80.25 |     50.39 |
+| tf_efficientnet_b1.ap_in1k-CrossEntropyLoss-light     |           64.14 |           81.22 |     52.59 |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light     |           63.77 |           80.76 |     51.44 |
+| tf_efficientnet_b5.ap_in1k-CrossEntropyLoss-light     |           63.28 |           81.25 |     51.5  |

@@ -1,0 +1,8 @@
+
+DF20_FIX - 384x384 - Production
+|                                                       |   Val. Accuracy |   Val. Recall@3 |   Val. F1 |
+|:------------------------------------------------------|----------------:|----------------:|----------:|
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light |           74.83 |           88.13 |     65.32 |
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light     |           70.16 |           85    |     59.34 |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light     |           72.47 |           86.63 |     62.31 |
+| vit_base_patch16_384-CrossEntropyLoss-light           |           76.08 |           88.91 |     66.76 |

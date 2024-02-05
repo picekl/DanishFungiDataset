@@ -1,0 +1,16 @@
+
+DF20_FIX - 299x299 - Production
+|                                                       |   Val. Accuracy |   Val. Recall@3 |   Val. F1 |
+|:------------------------------------------------------|----------------:|----------------:|----------:|
+| inception_resnet_v2.tf_in1k-CrossEntropyLoss-light    |           70.16 |           84.75 |     59.34 |
+| inception_v3.tf_in1k-CrossEntropyLoss-light           |           68.49 |           83.74 |     57.76 |
+| inception_v4.tf_in1k-CrossEntropyLoss-light           |           70.39 |           85.13 |     60.11 |
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light |           72.89 |           86.8  |     62.8  |
+| mobilenetv2_100.ra_in1k-CrossEntropyLoss-light        |           66.12 |           82.17 |     55.21 |
+| resnet18.a1_in1k-CrossEntropyLoss-light               |           60.16 |           77.66 |     49.13 |
+| resnet34.a1_in1k-CrossEntropyLoss-light               |           63.54 |           80.3  |     52.88 |
+| resnet50.a1_in1k-CrossEntropyLoss-light               |           66.63 |           82.53 |     56.24 |
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light     |           67.99 |           83.58 |     57.31 |
+| tf_efficientnet_b1.ap_in1k-CrossEntropyLoss-light     |           69.2  |           84.28 |     58.54 |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light     |           70.38 |           85.13 |     59.68 |
+| tf_efficientnet_b5.ap_in1k-CrossEntropyLoss-light     |           71.51 |           85.89 |     60.94 |

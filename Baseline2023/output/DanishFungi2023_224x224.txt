@@ -1,0 +1,8 @@
+
+DanishFungi2023 - 224x224 - Production
+|                                                       |   Val. Accuracy |   Val. Recall@3 |   Val. F1 |
+|:------------------------------------------------------|----------------:|----------------:|----------:|
+| legacy_seresnext101_32x4d.in1k-CrossEntropyLoss-light |           62.42 |           80.71 |     50.01 |
+| tf_efficientnet_b0.ap_in1k-CrossEntropyLoss-light     |           58.58 |           77.01 |     46    |
+| tf_efficientnet_b3.ap_in1k-CrossEntropyLoss-light     |           59.31 |           78.79 |     47.83 |
+| vit_base_patch16_224-CrossEntropyLoss-light           |           65.33 |           82.44 |     52.28 |
