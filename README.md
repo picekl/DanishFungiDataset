@@ -47,6 +47,7 @@ jupyter lab --ip 0.0.0.0 --port 8888 --allow-root
 
 ### Update - CNN Performance Evaluation
 Updated results with the dataset date split based on grouped unique observationIDs.
+Checkpoints are available at [Hugging Face Hub](https://huggingface.co/BVRA).
 
 |  | Top1 [%] | Top3 [%]          | F1 | Top1 [%] | Top3 [%] | F1    |
 | ---------------- | ---- |-------------------| ---- |------|-------|-------|
@@ -67,6 +68,9 @@ Updated results with the dataset date split based on grouped unique observationI
 
 
 ### Update - ViT x CNN Performance Evaluation
+Updated results with the dataset date split based on grouped unique observationIDs.
+Checkpoints are available at [Hugging Face Hub](https://huggingface.co/BVRA).
+
 |  | Top1 [%] | Top3 [%] | F1    | Top1 [%] | Top3 [%] | F1    |
 | ---------------- |----------|----------|-------|----------|----------|-------|
 | EfficientNet-B0     | 58.58    | 77.01    | 46.00 | 64.57    | 81.20    | 53.74 |
