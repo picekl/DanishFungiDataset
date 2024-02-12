@@ -6,7 +6,12 @@ from PIL import Image
 
 
 class DataCubeExtractor:
-    def __init__(self, tile_bbox: tuple, band_index: int = 1, padding: float = 0.0):
+    def __init__(
+            self,
+            tile_bbox: tuple,
+            band_index: int = 1,
+            padding: float = 0.5
+    ):
         self.tile_bbox = tile_bbox
         self.band_index = band_index
         self.padding = padding
@@ -48,7 +53,7 @@ class DataCubeExtractor:
 
             return self.tile_data.shape[0] > 0 and self.tile_data.shape[1] > 0
 
-    def __getitem__(self, item: tuple[float, float]) -> int:
+    def __getitem__(self, item: tuple[float, float]) -> float:
         """
         :param item: the GPS location (latitude, longitude)
         :return: value
@@ -61,11 +66,9 @@ class DataCubeExtractor:
 
         if x_index and y_index:
             if self.tile_data[y_index, x_index] == 0:
-                return self._search_radius_mean_indexed(
-                    x_index, y_index, radius_index=1
-                )
+                return self._search_radius_mean_indexed(x_index, y_index, radius_index=1)
 
-            return int(self.tile_data[y_index, x_index])
+            return self.tile_data[y_index, x_index]
 
         else:
             # print(f"Item {item} not in tile {self.tile_bbox}. Increase padding?")

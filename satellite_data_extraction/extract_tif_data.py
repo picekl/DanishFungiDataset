@@ -15,7 +15,10 @@ from PIL import Image
 from datacube_extractor import DataCubeExtractor, ImageDataCubeExtractor
 
 
-def get_quarter_dates(year, quarter):
+def get_quarter_dates(
+        year: int,
+        quarter: int
+):
     if quarter == 1:
         return "{}.12.02..{}.03.20".format(year - 1, year)
     if quarter == 2:
@@ -27,8 +30,11 @@ def get_quarter_dates(year, quarter):
 
 
 def create_tile_bboxes_from_df(
-    df, latitude_col_name, longitude_col_name, tile_size_deg
-) -> list:
+        df: pd.DataFrame,
+        latitude_col_name: str,
+        longitude_col_name: str,
+        tile_size_deg: tuple[float, float]
+) -> list[float, float, float, float]:
     min_latitude, max_latitude = (
         df[latitude_col_name].min(),
         df[latitude_col_name].max(),
@@ -42,35 +48,42 @@ def create_tile_bboxes_from_df(
     latitude_points = np.arange(min_latitude, max_latitude, latitude_step)
     longitude_points = np.arange(min_longitude, max_longitude, longitude_step)
 
-    if len(latitude_points) <= 1 or len(longitude_points) <= 1:
+    if len(latitude_points) < 1 or len(longitude_points) < 1:
         return []
 
     tile_bboxes = []
-    for left in latitude_points:
-        for bottom in longitude_points:
-            tile_bboxes.append((left, bottom, latitude_step, longitude_step))
+    for latitude in latitude_points:
+        for longitude in longitude_points:
+            tile_bboxes.append((latitude, longitude, latitude_step, longitude_step))
 
     return tile_bboxes
 
 
-def get_metadata_in_tile(df, tile_bbox, latitude_col="lat", longitude_col="lon"):
+def get_metadata_in_tile(
+        df: pd.DataFrame,
+        tile_bbox: tuple[float, float, float, float],
+        latitude_col: str,
+        longitude_col: str
+) -> pd.DataFrame:
     left, bottom, width, height = tile_bbox
 
     df_in_tile = df[
-        (left <= df[latitude_col])
-        & (df[longitude_col] < left + width)
-        & (bottom <= df[latitude_col])
-        & (df[longitude_col] < bottom + height)
+        ((left <= df[latitude_col]) & (df[latitude_col] < left + width))
+        & ((bottom <= df[longitude_col]) & (df[longitude_col] < bottom + height))
     ]
 
     return df_in_tile
 
 
 def search_tile(
-    position_df: pd.DataFrame, tile_bbox: tuple, tile_image_output_dir: str = None
-) -> dict[int, Any]:
+        position_df: pd.DataFrame,
+        tile_bbox: tuple,
+        latitude_col_name: str,
+        longitude_col_name: str,
+        tile_image_output_dir: str = None
+) -> dict:
     try:
-        df_in_tile = get_metadata_in_tile(position_df, tile_bbox)
+        df_in_tile = get_metadata_in_tile(position_df, tile_bbox, latitude_col_name, longitude_col_name)
         if len(df_in_tile) == 0:
             return {}
 
@@ -85,13 +98,17 @@ def search_tile(
 
         extracted_values_indexed = {}
         for index, row in df_in_tile.iterrows():
-            extracted_values_indexed[index] = extractor[row.tolist()]
+            extracted_value = extractor[row.tolist()]
+            if extracted_value is None:
+                continue
+            extracted_values_indexed[index] = int(extracted_value)
+
             if tile_image_output_dir:
                 extractor.save_patch_image(
                     item=row.tolist(), tile_image_output_dir=tile_image_output_dir
                 )
 
-        return {k: v for k, v in extracted_values_indexed.items() if v is not None}
+        return extracted_values_indexed
 
     except Exception as e:
         print(f"Error in tile {tile_bbox}: {e}")
@@ -113,8 +130,9 @@ if __name__ == "__main__":
     longitude_col_name = "lon"
     unique_id = "surveyId"
 
+    bands = ["red", "green", "blue", "nir", "swir1", "swir2"]
 
-    for band in ["red", "green", "blue", "nir", "swir1", "swir2"]:
+    for band in bands:
         print(f"Starting processing band: {band}")
         output_file_name = f"GLC24-PA-test-landsat_time_series-{band}"
 
@@ -153,8 +171,7 @@ if __name__ == "__main__":
                 if not os.path.isfile(raster_path):
                     print(f"Raster for q {quarter} of {year} not found. Skipping!")
                     continue
-                else:
-                    print(f"Extraction for q {quarter} of {year} started!")
+                print(f"Extraction for q {quarter} of {year} started!")
 
                 tile_image_output_dir = None
                 if create_images:
@@ -163,7 +180,7 @@ if __name__ == "__main__":
 
                 start_time = time.time()
                 extracted_tiles = Parallel(n_jobs=n_jobs)(
-                    delayed(search_tile)(position_df, tile_bbox, tile_image_output_dir)
+                    delayed(search_tile)(position_df, tile_bbox, latitude_col_name, longitude_col_name, tile_image_output_dir)
                     for tile_bbox in tqdm(tile_bboxes, total=len(tile_bboxes))
                 )
                 extracted_values_indexed = dict(ChainMap(*extracted_tiles))
@@ -172,6 +189,9 @@ if __name__ == "__main__":
                     extracted_values_indexed
                 )
                 print(f"Elapsed time: {time.time() - start_time:.2f} seconds")
+                found_values_total = sum(~out_metadata[f"{year}_{quarter}"].isna())
+                print(f"Found: {found_values_total} values from initial: {len(preceding_yearly_metadata)} entries "
+                      f"-> {found_values_total/len(preceding_yearly_metadata):.2%}")
 
         out_metadata.to_csv(f"{output_dir}/{output_file_name}.csv", index=False)
         print(f"Band: {band} done!")
