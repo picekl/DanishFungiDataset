@@ -1,0 +1,24 @@
+# data
+augmentations: 'light'
+image_size: [224, 224]  # [height, width]
+dataset: 'DF20'
+
+# model
+architecture: 'vit_base_patch16_224'
+
+# training
+train:
+loss: 'CrossEntropyLoss'
+optimizer: 'SGD'
+scheduler: 'plateau'
+epochs: 100
+learning_rate: 0.01
+batch_size: 16
+accumulation_steps: 4
+
+# other
+random_seed: 777
+workers: 12
+multigpu: False
+tags: ["DF20_FIX", "224x224", "Production"]  # W&B Run tags
+root_path: "../"

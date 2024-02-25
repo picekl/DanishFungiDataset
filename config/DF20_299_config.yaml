@@ -1,0 +1,24 @@
+# data
+augmentations: 'light'
+image_size: [299, 299]  # [height, width]
+dataset: 'DF20'
+
+# model
+architecture: 'mobilenetv2_100.ra_in1k'
+
+# training
+train:
+loss: 'CrossEntropyLoss'
+optimizer: 'SGD'
+scheduler: 'plateau'
+epochs: 100
+learning_rate: 0.01
+batch_size: 64
+accumulation_steps: 100
+
+# other
+random_seed: 777
+workers: 6
+multigpu: False
+tags: ["DF20_FIX", "299x299", "Production"]  # W&B Run tags
+root_path: "../"
